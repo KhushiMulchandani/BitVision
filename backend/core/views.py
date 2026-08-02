@@ -9,7 +9,9 @@ from django_filters import rest_framework as filters
 from .models import OHLCV,Feature,Prediction,ModelMetric,Portfolio,Alert
 from .serializers import OHLCVSerializer,FeatureSerializer,PredictionSerializer,ModelMetricSerializer,PortfolioSerializer,AlertSerializer
 from rest_framework.views import APIView
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from decimal import Decimal
 
 class OHLCVFilter(filters.FilterSet):
     start_date = filters.DateFilter(field_name="date", lookup_expr="gte")
@@ -120,3 +122,95 @@ class PredictStubView(APIView):
             }
         }
         return Response(stub_data)
+
+class PortfolioView(APIView):
+    """
+    GET /api/portfolio/ - Retrieve current user portfolio (auto-creates if missing).
+    POST /api/portfolio/ - Buy/Sell BTC using paper trading cash.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        portfolio, created = Portfolio.objects.get_or_create(user=request.user)
+        serializer = PortfolioSerializer(portfolio)
+        return Response(serializer.data)
+
+    def post(self, request):
+        portfolio, _ = Portfolio.objects.get_or_create(user=request.user)
+        action = request.data.get("action")
+        amount_inr = request.data.get("amount_inr")
+
+        if not action or amount_inr is None:
+            return Response(
+                {"error": "Both 'action' and 'amount_inr' are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            amount_inr = Decimal(str(amount_inr))
+            if amount_inr <= 0:
+                return Response(
+                    {"error": "Amount must be greater than zero."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        except Exception:
+            return Response(
+                {"error": "Invalid amount provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Get latest BTC price from OHLCV table
+        latest_entry = OHLCV.objects.order_by("-date").first()
+        if not latest_entry:
+            return Response(
+                {"error": "No market data available to perform trade."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        btc_price = latest_entry.close  # Price in USD/INR
+
+        if action == "buy":
+            if portfolio.cash_balance < amount_inr:
+                return Response(
+                    {"error": "Insufficient cash balance."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            btc_purchased = amount_inr / btc_price
+            portfolio.cash_balance -= amount_inr
+            portfolio.btc_holdings += btc_purchased
+            portfolio.save()
+
+        elif action == "sell":
+            btc_to_sell = amount_inr / btc_price
+            if portfolio.btc_holdings < btc_to_sell:
+                return Response(
+                    {"error": "Insufficient BTC holdings to sell."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            portfolio.cash_balance += amount_inr
+            portfolio.btc_holdings -= btc_to_sell
+            portfolio.save()
+
+        else:
+            return Response(
+                {"error": "Invalid action. Use 'buy' or 'sell'."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = PortfolioSerializer(portfolio)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AlertListCreateView(generics.ListCreateAPIView):
+    """
+    GET /api/alerts/ - List active user alerts.
+    POST /api/alerts/ - Create new price alert target.
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = AlertSerializer
+
+    def get_queryset(self):
+        return Alert.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
