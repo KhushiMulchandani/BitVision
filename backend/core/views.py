@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from .models import OHLCV,Feature,Prediction,ModelMetric,Portfolio,Alert
 from .serializers import OHLCVSerializer,FeatureSerializer,PredictionSerializer,ModelMetricSerializer,PortfolioSerializer,AlertSerializer
+from rest_framework.views import APIView
 
 
 class OHLCVFilter(filters.FilterSet):
@@ -100,3 +101,22 @@ class BacktestListView(generics.ListAPIView):
                 pass
 
         return queryset
+
+class PredictStubView(APIView):
+    """
+    GET /api/predict/
+    Returns a hardcoded stub response matching the contract shape for frontend integration.
+    """
+    def get(self, request):
+        stub_data = {
+            "date": "2026-08-03",
+            "predicted_price": 61500.00,
+            "model_used": "stacked",
+            "confidence": 0.85,
+            "indicators_used": {
+                "rsi_14": 58.4,
+                "macd": 120.5,
+                "ma_20": 60800.00
+            }
+        }
+        return Response(stub_data)
