@@ -1,0 +1,36 @@
+:root{
+
+--bg:#F7FBF8;
+
+--surface:#FFFFFF;
+
+--primary:#66B67A;
+
+--primary-dark:#4EA96A;
+
+--text:#0F172A;
+
+--text-light:#64748B;
+
+--border:#E7ECEA;
+
+--shadow:0 20px 60px rgba(15,23,42,.08);
+
+}
+[data-theme="dark"]{
+
+--bg:#08110D;
+
+--surface:#101A14;
+
+--primary:#66B67A;
+
+--text:#F4F4F4;
+
+--text-light:#B5C2BA;
+
+--border:#1E2C23;
+
+--shadow:0 20px 60px rgba(0,0,0,.4);
+
+}

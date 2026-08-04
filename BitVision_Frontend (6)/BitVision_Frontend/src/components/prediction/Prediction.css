@@ -1,0 +1,78 @@
+/* ===========================
+   PAGE
+=========================== */
+
+.prediction-page{
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* ===========================
+   HEADER
+=========================== */
+
+.prediction-header{
+
+    text-align:center;
+
+    margin-bottom:60px;
+
+}
+
+.prediction-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:10px 20px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    border-radius:999px;
+
+    font-weight:600;
+
+    margin-bottom:24px;
+
+    border:1px solid rgba(95,167,119,.18);
+
+}
+
+.prediction-header h1{
+
+    font-size:3.8rem;
+
+    font-weight:700;
+
+    color:#0F172A;
+
+    margin-bottom:18px;
+
+    font-family:"Space Grotesk",sans-serif;
+
+}
+
+.prediction-header h1 span{
+
+    color:#5FA777;
+
+}
+
+.prediction-header p{
+
+    max-width:760px;
+
+    margin:auto;
+
+    color:#64748B;
+
+    font-size:1.08rem;
+
+    line-height:1.8;
+
+}

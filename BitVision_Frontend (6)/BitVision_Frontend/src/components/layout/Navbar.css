@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap');
+
+/* ===========================
+   Reset
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#F7FAF7;
+    --surface:#FFFFFF;
+
+    --text:#0F172A;
+    --muted:#64748B;
+
+    --border:#E5E7EB;
+
+    --primary:#5FA777;
+    --secondary:#D6EFD8;
+    --accent:#84CC16;
+
+}
+
+body{
+
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+
+}
+
+/* ===========================
+   Navbar
+=========================== */
+
+.navbar{
+
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    width:100%;
+
+    background:rgba(255,255,255,.85);
+
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.navbar-container{
+
+    width:92%;
+    max-width:1450px;
+
+    margin:auto;
+
+    height:88px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+}
+
+/* ===========================
+   Logo
+=========================== */
+
+.logo{
+
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    cursor:pointer;
+
+}
+
+.logo img{
+
+    width:42px;
+    height:42px;
+
+    object-fit:contain;
+
+}
+
+.logo span{
+
+    font-family:'Space Grotesk',sans-serif;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+/* ===========================
+   Navigation
+=========================== */
+
+.nav-links{
+
+    display:flex;
+
+    list-style:none;
+
+    gap:52px;
+
+}
+
+.nav-links a{
+
+    text-decoration:none;
+
+    color:var(--text);
+
+    font-size:1rem;
+
+    font-weight:500;
+
+    transition:.3s;
+
+}
+
+.nav-links a:hover{
+
+    color:var(--primary);
+
+}
+
+/* ===========================
+   Right
+=========================== */
+
+.nav-right{
+
+    display:flex;
+    align-items:center;
+    gap:18px;
+
+}
+
+/* Theme */
+
+.theme-btn{
+
+    width:52px;
+    height:52px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:var(--secondary);
+
+    color:var(--primary);
+
+    cursor:pointer;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:1rem;
+
+    transition:.3s;
+
+}
+
+.theme-btn:hover{
+
+    transform:rotate(15deg);
+
+}
+
+/* Login */
+
+.login-btn{
+
+    padding:13px 34px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 24px rgba(95,167,119,.25);
+
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+
+    .navbar-container{
+
+        width:95%;
+
+    }
+
+    .nav-links{
+
+        gap:30px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .nav-links{
+
+        display:none;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .navbar-container{
+
+        height:75px;
+
+    }
+
+    .logo span{
+
+        font-size:1.6rem;
+
+    }
+
+}
