@@ -24,5 +24,8 @@ export const getSentiment = async () => {
   const response = await API.get('sentiment/');
   return response.data;
 };
+export const getModelComparison = () => API.get('compare/');
+export const getBacktestData = (days = 30) => API.get(`backtest/?days=${days}`);
+export const getPrediction = () => API.get('predict/');
 
 export default API;
