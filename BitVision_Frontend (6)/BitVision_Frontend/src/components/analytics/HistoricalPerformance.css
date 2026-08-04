@@ -1,0 +1,217 @@
+/* ==========================================
+   HISTORICAL PERFORMANCE
+========================================== */
+
+.historical-performance{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+    height:100%;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.history-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.history-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+    font-weight:600;
+
+    margin-bottom:4px;
+
+}
+
+.history-header p{
+
+    font-size:.80rem;
+
+    color:#667085;
+
+}
+
+/* ==========================================
+   FILTERS
+========================================== */
+
+.history-filter{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+.history-filter button{
+
+    border:none;
+
+    background:#F5F7F6;
+
+    color:#667085;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.72rem;
+
+    font-weight:500;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.history-filter button.active{
+
+    background:#5FA777;
+
+    color:#fff;
+
+}
+
+/* ==========================================
+   CHART
+========================================== */
+
+.history-chart{
+
+    height:210px;
+
+    margin-bottom:18px;
+
+}
+
+.chart-svg{
+
+    width:100%;
+
+    height:100%;
+
+}
+
+/* ==========================================
+   PERFORMANCE TABLE
+========================================== */
+
+.performance-table{
+
+    border-top:1px solid #EEF2EF;
+
+    padding-top:14px;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.performance-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:11px 0;
+
+    border-bottom:1px solid #F3F5F6;
+
+}
+
+.performance-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.performance-row span{
+
+    font-size:.82rem;
+
+    color:#667085;
+
+}
+
+.performance-row strong{
+
+    font-size:.86rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+}
+
+/* ==========================================
+   COLORS
+========================================== */
+
+.positive{
+
+    color:#16C784 !important;
+
+}
+
+.negative{
+
+    color:#EF4444 !important;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+.history-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:14px;
+
+}
+
+.history-filter{
+
+    flex-wrap:wrap;
+
+}
+
+.history-chart{
+
+    height:170px;
+
+}
+
+}

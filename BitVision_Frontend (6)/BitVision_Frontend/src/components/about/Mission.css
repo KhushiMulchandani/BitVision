@@ -1,0 +1,136 @@
+/* ==========================================
+   MISSION GRID
+========================================== */
+
+.mission-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+
+}
+
+/* ==========================================
+   CARD
+========================================== */
+
+.mission-card{
+
+    background:#FFFFFF;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+    transition:.25s ease;
+
+}
+
+.mission-card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 28px rgba(15,23,42,.06);
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.card-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+    font-weight:600;
+
+}
+
+.card-header span{
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#EEF8F1;
+
+    color:#5FA777;
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   LISTS
+========================================== */
+
+.mission-list,
+.tech-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+.mission-list div,
+.tech-list div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#18213A;
+
+    font-size:.88rem;
+
+}
+
+.mission-list svg,
+.tech-list svg{
+
+    color:#5FA777;
+
+    font-size:1rem;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:900px){
+
+    .mission-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

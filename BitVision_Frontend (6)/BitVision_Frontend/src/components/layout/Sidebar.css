@@ -1,0 +1,24 @@
+.sidebar{
+
+    width:240px;
+    height:calc(100vh - 70px);
+
+    background:#121C2E;
+
+    display:flex;
+    flex-direction:column;
+
+    padding:25px;
+    gap:18px;
+}
+
+.sidebar a{
+
+    color:#94A3B8;
+    transition:.25s;
+}
+
+.sidebar a:hover{
+
+    color:white;
+}

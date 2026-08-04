@@ -1,0 +1,215 @@
+.up{
+    color:#2EAF62;
+    font-weight:600;
+}
+
+.down{
+    color:#E85D5D;
+    font-weight:600;
+}
+/* =====================================
+   TABLE SECTION
+===================================== */
+
+.prediction-table-section{
+
+    margin:80px 0;
+
+}
+
+/* Header */
+
+.table-header{
+
+    margin-bottom:30px;
+
+}
+
+.table-badge{
+
+    display:inline-flex;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+    margin-bottom:16px;
+
+}
+
+.table-header h2{
+
+    font-size:2rem;
+
+    color:#18213A;
+
+    margin-bottom:10px;
+
+}
+
+.table-header p{
+
+    color:#667794;
+
+}
+
+/* Card */
+
+.table-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    border:1px solid #E8EEEA;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 12px 30px rgba(15,23,42,.05);
+
+}
+
+/* Table */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+thead{
+
+    background:#F8FBF9;
+
+}
+
+th{
+
+    padding:20px;
+
+    text-align:left;
+
+    font-size:.9rem;
+
+    color:#667794;
+
+    font-weight:600;
+
+}
+
+td{
+
+    padding:22px 20px;
+
+    color:#18213A;
+
+    font-size:.95rem;
+
+    border-top:1px solid #EEF2EF;
+
+}
+
+tbody tr{
+
+    transition:.3s;
+
+}
+
+tbody tr:hover{
+
+    background:#FAFCFA;
+
+}
+
+/* Positive */
+
+.positive{
+
+    color:#16C784;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+/* Negative */
+
+.negative{
+
+    color:#E85D5D;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+/* Status */
+
+.status{
+
+    display:inline-flex;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+}
+
+.success{
+
+    background:#EDF8EF;
+
+    color:#16C784;
+
+}
+
+.danger{
+
+    background:#FDF1F1;
+
+    color:#E85D5D;
+
+}
+
+/* Responsive */
+
+@media(max-width:900px){
+
+.table-card{
+
+overflow-x:auto;
+
+}
+
+table{
+
+min-width:760px;
+
+}
+
+}

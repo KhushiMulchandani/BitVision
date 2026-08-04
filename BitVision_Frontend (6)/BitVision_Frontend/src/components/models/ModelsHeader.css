@@ -1,0 +1,129 @@
+/* ==========================================
+   MODELS HEADER
+========================================== */
+
+.models-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.models-header-left{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+/* Badge */
+
+.models-badge{
+
+    width:max-content;
+
+    padding:7px 14px;
+
+    border-radius:999px;
+
+    background:#EEF8F1;
+
+    color:#5FA777;
+
+    font-size:.76rem;
+
+    font-weight:600;
+
+    letter-spacing:.3px;
+
+}
+
+/* Heading */
+
+.models-header h1{
+
+    font-size:2rem;
+
+    color:#18213A;
+
+    font-weight:700;
+
+}
+
+/* Description */
+
+.models-header p{
+
+    max-width:620px;
+
+    color:#667085;
+
+    font-size:.92rem;
+
+    line-height:1.6;
+
+}
+
+/* Status */
+
+.models-status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:10px 16px;
+
+    border-radius:999px;
+
+    border:1px solid #E8ECEA;
+
+    background:#fff;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+
+}
+
+.status-dot{
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:#16C784;
+
+}
+
+/* Responsive */
+
+@media(max-width:900px){
+
+.models-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:18px;
+
+}
+
+}

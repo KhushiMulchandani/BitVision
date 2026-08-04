@@ -1,0 +1,79 @@
+.bg{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:-10;
+
+    background:#F7FAF7;
+
+}
+
+/* Left Glow */
+
+.blob{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(140px);
+
+    opacity:.12;
+
+}
+
+/* Top Left */
+
+.blob1{
+
+    width:420px;
+
+    height:420px;
+
+    background:#D6EFD8;
+
+    left:-160px;
+
+    top:-120px;
+
+}
+
+/* Bottom Right */
+
+.blob2{
+
+    width:350px;
+
+    height:350px;
+
+    background:#EAF6EB;
+
+    right:-120px;
+
+    bottom:-120px;
+
+}
+
+/* Center */
+
+.blob3{
+
+    width:260px;
+
+    height:260px;
+
+    background:#EDF8EF;
+
+    left:50%;
+
+    top:38%;
+
+    transform:translate(-50%,-50%);
+
+}

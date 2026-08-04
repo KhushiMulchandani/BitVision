@@ -1,0 +1,485 @@
+.market-overview{
+
+    margin-top:80px;
+
+}
+
+.market-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    margin-bottom:32px;
+
+}
+
+.market-badge{
+
+    display:inline-flex;
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
+}
+
+.market-header h2{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:#18213A;
+
+    margin-bottom:10px;
+
+}
+
+.market-header p{
+
+    color:#667085;
+
+    font-size:1rem;
+
+    line-height:1.7;
+
+    max-width:100%;
+
+    white-space:nowrap;
+
+}
+
+.market-grid{
+
+    display:grid;
+
+    grid-template-columns:2.2fr .8fr;
+
+    gap:24px;
+
+}
+
+/* LEFT */
+
+.chart-card{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+}
+.chart-wrapper{
+
+    height:220px;
+
+    margin:18px 0;
+
+}
+.chart-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.chart-top h3{
+
+    font-size:1.15rem;
+
+    color:#18213A;
+
+    margin-bottom:6px;
+
+}
+
+.chart-top span{
+
+    color:#98A2B3;
+
+    font-size:.9rem;
+
+}
+
+.chart-price{
+
+    font-size:1.4rem;
+
+    font-weight:700;
+
+    color:#18213A;
+
+}
+
+.chart-area{
+
+    height:330px;
+
+    border-radius:18px;
+
+    background:#FAFCFA;
+
+    border:1px solid #EEF2EF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+}
+
+.market-chart{
+
+    width:100%;
+
+    height:100%;
+
+}
+
+.market-chart polyline{
+
+    fill:none;
+
+    stroke:#5FA777;
+
+    stroke-width:5;
+
+    stroke-linecap:round;
+
+    stroke-linejoin:round;
+
+}
+
+.chart-tabs{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:24px;
+
+}
+
+.chart-tabs button{
+
+    border:none;
+
+    background:#F3F7F4;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    color:#64748B;
+
+    transition:.3s;
+
+}
+
+.chart-tabs button.active{
+
+    background:#5FA777;
+
+    color:white;
+
+}
+
+/* RIGHT */
+
+.market-side{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.overview-card{
+
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:28px;
+
+    border:1px solid #E8EFEA;
+
+    box-shadow:0 15px 35px rgba(15,23,42,.05);
+
+}
+
+.overview-card svg{
+
+    font-size:1.3rem;
+
+    color:#5FA777;
+
+    margin-bottom:18px;
+
+}
+
+.overview-card h4{
+
+    color:#667085;
+
+    font-size:.9rem;
+
+    margin-bottom:10px;
+
+}
+
+.overview-card h2{
+
+    color:#18213A;
+
+    font-size:1.5rem;
+
+}
+
+.green{
+
+    color:#16C784 !important;
+
+}
+
+@media(max-width:1000px){
+
+.market-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.market-side{
+
+flex-direction:row;
+
+}
+
+.overview-card{
+
+flex:1;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.market-side{
+
+flex-direction:column;
+
+}
+
+.chart-area{
+
+height:240px;
+
+}
+
+}
+.market-stats{
+    display:grid;
+    gap:18px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid #E7ECEA;
+    border-radius:18px;
+    padding:24px;
+}
+
+.stat-card h4{
+    color:#667794;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.stat-card h2{
+    font-size:32px;
+}
+
+.bullish h2{
+    color:#2EAF62;
+}
+
+.bearish h2{
+    color:#E85D5D;
+}
+.chart-price{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+    font-size:1.5rem;
+
+    font-weight:700;
+
+    color:#18213A;
+
+}
+
+.chart-price small{
+
+    margin-top:8px;
+
+    font-size:.9rem;
+
+}
+
+.positive{
+
+    color:#16C784;
+
+}
+
+.negative{
+
+    color:#E85D5D;
+
+}
+
+.chart-green{
+
+    fill:none;
+
+    stroke:#5FA777;
+
+    stroke-width:5;
+
+    stroke-linecap:round;
+
+    stroke-linejoin:round;
+
+}
+
+.chart-red{
+
+    fill:none;
+
+    stroke:#E85D5D;
+
+    stroke-width:5;
+
+    stroke-linecap:round;
+
+    stroke-linejoin:round;
+
+}
+
+.chart-bottom{
+
+    margin-top:22px;
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
+
+}
+
+.chart-bottom div{
+
+    background:#FAFCFA;
+
+    border:1px solid #EEF2EF;
+
+    border-radius:16px;
+
+    padding:16px;
+
+}
+
+.chart-bottom h4{
+
+    color:#667794;
+
+    font-size:.85rem;
+
+    margin-bottom:8px;
+
+}
+
+.chart-bottom span{
+
+    font-weight:700;
+
+    color:#18213A;
+
+}
+/* =====================================
+   Trend Colors
+===================================== */
+
+.trend-up{
+    color:#16C784;
+    font-size:1.55rem;
+    font-weight:700;
+}
+
+.trend-down{
+    color:#EF4444;
+    font-size:1.55rem;
+    font-weight:700;
+}
+
+.trend-risk{
+    color:#F59E0B;
+    font-size:1.55rem;
+    font-weight:700;
+}
+.chart-card h2{
+
+    font-size:1.15rem;
+
+    font-weight:600;
+
+}
+.price{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+}
+.stat-card{
+
+    padding:16px;
+
+    min-height:92px;
+
+}
