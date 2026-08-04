@@ -43,7 +43,7 @@ class FeatureListView(generics.ListAPIView):
     API endpoint that returns calculated technical indicators and features.
     Example: /api/features/?start_date=2026-01-01&end_date=2026-06-01
     """
-    queryset = Feature.objects.all().order_by("date")
+    queryset = Feature.objects.all().order_by("-date")
     serializer_class = FeatureSerializer
     filterset_class = FeatureFilter
 
@@ -56,7 +56,7 @@ class PriceListView(generics.ListAPIView):
 
     def get_queryset(self):
         try:
-            queryset = OHLCV.objects.all().order_by("date")
+            queryset = OHLCV.objects.all().order_by("-date")
             range_param = self.request.query_params.get("range", None)
 
             if range_param and range_param.endswith("d"):

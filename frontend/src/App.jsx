@@ -9,6 +9,8 @@ import Portfolio from "./pages/Portfolio";
 import News from "./pages/News";
 import Settings from "./pages/Settings";
 import Models from "./pages/Models";
+import Login from "./pages/Login";
+import Backtest from "./pages/Backtest";
 
 function App() {
   return (
@@ -31,6 +33,10 @@ function App() {
       <Route path="/models" element={<Models />} />
 
       <Route path="/about" element={<About />} />
+
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/backtest" element={<Backtest />} />
 
     </Routes>
   );
