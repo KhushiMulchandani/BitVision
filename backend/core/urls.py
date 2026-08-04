@@ -1,16 +1,14 @@
 from django.urls import path
-from .views import OHLCVListView,FeatureListView,PriceListView,CompareListView,BacktestListView,PredictStubView,PortfolioView,AlertListCreateView
+from .views import (OHLCVListView,FeatureListView,PriceListView,CompareListView,BacktestListView,PredictStubView,PortfolioView,AlertListCreateView,SentimentView,)
 
 urlpatterns = [
     path('ohlcv/', OHLCVListView.as_view(), name='ohlcv-list'),
     path("features/", FeatureListView.as_view(), name="feature-list"),
-    # Stage 6 Read-only routes for Frontend Integration
     path("price/", PriceListView.as_view(), name="price-list"),
     path("compare/", CompareListView.as_view(), name="compare-list"),
     path("backtest/", BacktestListView.as_view(), name="backtest-list"),
-    # Stage 7 Prediction Stub route
     path("predict/", PredictStubView.as_view(), name="predict-stub"),
-    # Stage 8: Paper Trading & Alerts
     path("portfolio/", PortfolioView.as_view(), name="portfolio"),
     path("alerts/", AlertListCreateView.as_view(), name="alert-list-create"),
+    path("sentiment/", SentimentView.as_view(), name="sentiment"),
 ]
