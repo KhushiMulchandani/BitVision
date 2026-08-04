@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from decimal import Decimal
+import requests
 
 class OHLCVFilter(filters.FilterSet):
     start_date = filters.DateFilter(field_name="date", lookup_expr="gte")
@@ -290,3 +291,37 @@ class AlertListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class SentimentView(APIView):
+    """
+    GET /api/sentiment/
+    Fetches the latest Fear & Greed Index from alternative.me API.
+    """
+    def get(self, request):
+        try:
+            url = "https://api.alternative.me/fng/?limit=1"
+            response = requests.get(url, timeout=5)
+            
+            if response.status_code == 200:
+                data = response.json()
+                fng_data = data.get("data", [])[0]
+                return Response(
+                    {
+                        "value": fng_data.get("value"),
+                        "value_classification": fng_data.get("value_classification"),
+                        "timestamp": fng_data.get("timestamp"),
+                        "time_until_update": fng_data.get("time_until_update"),
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"error": "Failed to fetch Fear & Greed Index from external API."},
+                    status=status.HTTP_502_BAD_GATEWAY,
+                )
+        except Exception as e:
+            return Response(
+                {"error": "An error occurred while fetching sentiment data.", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        

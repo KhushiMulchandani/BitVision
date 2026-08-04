@@ -20,4 +20,9 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+export const getSentiment = async () => {
+  const response = await API.get('sentiment/');
+  return response.data;
+};
+
 export default API;
