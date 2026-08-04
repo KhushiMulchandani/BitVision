@@ -1,0 +1,297 @@
+/* ==========================================
+   PREDICTION SUMMARY
+========================================== */
+
+.prediction-summary{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    height:100%;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.summary-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+}
+
+.summary-header h2{
+
+    font-size:1.05rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+    margin-bottom:4px;
+
+}
+
+.summary-header p{
+
+    font-size:.80rem;
+
+    color:#667085;
+
+}
+
+.live-badge{
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.summary-table{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.summary-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #EEF2EF;
+
+}
+
+.summary-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.summary-label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.summary-label svg{
+
+    color:#5FA777;
+
+    font-size:.95rem;
+
+}
+
+.summary-label span{
+
+    font-size:.84rem;
+
+    color:#667085;
+
+}
+
+.summary-row strong{
+
+    font-size:.88rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+}
+
+/* ==========================================
+   VERDICT
+========================================== */
+
+.prediction-verdict{
+
+    margin-top:auto;
+
+    border:1px solid #EEF2EF;
+
+    background:#FAFCFB;
+
+    border-radius:16px;
+
+    padding:16px;
+
+}
+
+.verdict-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:14px;
+
+}
+
+.verdict-top span:first-child{
+
+    font-size:.84rem;
+
+    color:#667085;
+
+}
+
+.buy-pill{
+
+    background:#EDF8EF;
+
+    color:#16C784;
+
+    padding:6px 16px;
+
+    border-radius:999px;
+
+    font-size:.76rem;
+
+    font-weight:700;
+
+    letter-spacing:.3px;
+
+}
+
+.verdict-bottom{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:14px;
+
+    padding-top:14px;
+
+    border-top:1px solid #EEF2EF;
+
+}
+
+.verdict-bottom small{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:.72rem;
+
+    color:#98A2B3;
+
+    margin-bottom:6px;
+
+}
+
+.verdict-bottom strong{
+
+    font-size:.86rem;
+
+    color:#18213A;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   COLORS
+========================================== */
+
+.positive{
+
+    color:#16C784 !important;
+
+}
+
+.warning{
+
+    color:#F59E0B !important;
+
+}
+
+.negative{
+
+    color:#EF4444 !important;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:900px){
+
+    .verdict-bottom{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .summary-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .prediction-summary{
+
+        padding:18px;
+
+    }
+
+}

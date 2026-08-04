@@ -1,0 +1,136 @@
+.market-intelligence{
+
+    width:100%;
+
+}
+
+.intelligence-card{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    box-shadow:0 8px 24px rgba(15,23,42,.04);
+
+}
+
+.intelligence-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.intelligence-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+}
+
+.intelligence-header span{
+
+    font-size:.75rem;
+
+    color:#5FA777;
+
+    background:#EDF8EF;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+}
+
+.intel-row{
+
+    display:grid;
+
+    grid-template-columns:2fr .8fr .8fr;
+
+    align-items:center;
+
+    padding:14px 0;
+
+    border-bottom:1px solid #EEF2EF;
+
+}
+
+.intel-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.intel-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.intel-left svg{
+
+    color:#5FA777;
+
+    font-size:.9rem;
+
+}
+
+.intel-left span{
+
+    font-size:.9rem;
+
+    color:#18213A;
+
+}
+
+.intel-row strong{
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+}
+
+.intel-row small{
+
+    justify-self:end;
+
+    font-size:.8rem;
+
+    color:#667085;
+
+    font-weight:600;
+
+}
+
+.green{
+
+    color:#16C784;
+
+}
+
+.orange{
+
+    color:#F59E0B;
+
+}
+.market-intelligence{
+    height:100%;
+}

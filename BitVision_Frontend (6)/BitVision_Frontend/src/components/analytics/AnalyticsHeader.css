@@ -1,0 +1,63 @@
+.analytics-header{
+
+    padding:42px 0 34px;
+
+    text-align:center;
+
+}
+
+.analytics-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px 24px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    margin-bottom:22px;
+
+}
+
+.analytics-header h1{
+
+    font-size:3rem;
+
+    color:#18213A;
+
+    font-weight:700;
+
+    margin-bottom:18px;
+
+}
+
+.analytics-header h1 span{
+
+    color:#5FA777;
+
+}
+
+.analytics-header p{
+
+    max-width:760px;
+
+    margin:auto;
+
+    color:#667085;
+
+    font-size:1.08rem;
+
+    line-height:1.8;
+
+}
