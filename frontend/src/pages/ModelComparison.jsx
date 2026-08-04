@@ -14,7 +14,7 @@ function ModelComparison() {
     setLoading(true);
     setError('');
     try {
-      // Hits Django endpoint: GET /api/compare/
+      // Endpoint: GET /api/compare/
       const response = await API.get('compare/');
       const data = response.data.results ? response.data.results : response.data;
       setMetrics(data);
@@ -29,7 +29,7 @@ function ModelComparison() {
   return (
     <div style={{ padding: '30px', maxWidth: '1000px', margin: '0 auto' }}>
       <h1>Model Performance Comparison</h1>
-      <p>Evaluation metrics across active ML models</p>
+      <p>Evaluation metrics calculated across trained ML models</p>
 
       {loading && <p>Loading model metrics...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -44,9 +44,10 @@ function ModelComparison() {
             <thead>
               <tr style={{ borderBottom: '2px solid #ccc', backgroundColor: '#f4f4f4' }}>
                 <th style={{ padding: '10px' }}>Model Name</th>
-                <th style={{ padding: '10px' }}>RMSE</th>
-                <th style={{ padding: '10px' }}>MAE</th>
+                <th style={{ padding: '10px' }}>MAE ($)</th>
+                <th style={{ padding: '10px' }}>RMSE ($)</th>
                 <th style={{ padding: '10px' }}>MAPE (%)</th>
+                <th style={{ padding: '10px' }}>Directional Acc (%)</th>
                 <th style={{ padding: '10px' }}>Evaluated At</th>
               </tr>
             </thead>
@@ -54,11 +55,14 @@ function ModelComparison() {
               {metrics.map((item, index) => (
                 <tr key={item.id || index} style={{ borderBottom: '1px solid #eee' }}>
                   <td style={{ padding: '10px', fontWeight: 'bold' }}>{item.model_name || 'N/A'}</td>
-                  <td style={{ padding: '10px' }}>{item.rmse ?? 'N/A'}</td>
-                  <td style={{ padding: '10px' }}>{item.mae ?? 'N/A'}</td>
-                  <td style={{ padding: '10px' }}>{item.mape ? `${item.mape}%` : 'N/A'}</td>
+                  <td style={{ padding: '10px' }}>{item.mae !== undefined ? Number(item.mae).toFixed(2) : 'N/A'}</td>
+                  <td style={{ padding: '10px' }}>{item.rmse !== undefined ? Number(item.rmse).toFixed(2) : 'N/A'}</td>
+                  <td style={{ padding: '10px' }}>{item.mape !== undefined ? `${Number(item.mape).toFixed(2)}%` : 'N/A'}</td>
+                  <td style={{ padding: '10px', color: '#16a34a', fontWeight: 'bold' }}>
+                    {item.directional_accuracy !== undefined ? `${Number(item.directional_accuracy).toFixed(2)}%` : 'N/A'}
+                  </td>
                   <td style={{ padding: '10px' }}>
-                    {item.evaluated_at ? new Date(item.evaluated_at).toLocaleDateString() : 'N/A'}
+                    {item.evaluated_at ? new Date(item.evaluated_at).toLocaleString() : 'N/A'}
                   </td>
                 </tr>
               ))}
