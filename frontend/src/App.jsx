@@ -11,6 +11,7 @@ import Settings from "./pages/Settings";
 import Models from "./pages/Models";
 import Login from "./pages/Login";
 import Backtest from "./pages/Backtest";
+import ModelComparison from "./pages/ModelComparison";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
       <Route path="/settings" element={<Settings />} />
 
       <Route path="/models" element={<Models />} />
+
+      <Route path="/modelcomparison" element={<ModelComparison />} />
 
       <Route path="/about" element={<About />} />
 

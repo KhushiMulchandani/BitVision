@@ -15,9 +15,8 @@ function Backtest() {
     setLoading(true);
     setError('');
     try {
-      // Hits Django endpoint: GET /api/backtest/?days=30
+      // Endpoint: GET /api/backtest/?days=30
       const response = await API.get(`backtest/?days=${selectedDays}`);
-      // If backend returns paginated response, access .results; otherwise use data directly
       const data = response.data.results ? response.data.results : response.data;
       setBacktestData(data);
     } catch (err) {
@@ -59,22 +58,40 @@ function Backtest() {
             <thead>
               <tr style={{ borderBottom: '2px solid #ccc', backgroundColor: '#f4f4f4' }}>
                 <th style={{ padding: '10px' }}>Date</th>
+                <th style={{ padding: '10px' }}>Model</th>
                 <th style={{ padding: '10px' }}>Predicted Price</th>
                 <th style={{ padding: '10px' }}>Actual Price</th>
-                <th style={{ padding: '10px' }}>Model</th>
+                <th style={{ padding: '10px' }}>Variance ($)</th>
               </tr>
             </thead>
             <tbody>
-              {backtestData.map((row, index) => (
-                <tr key={row.id || index} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '10px' }}>{row.date}</td>
-                  <td style={{ padding: '10px' }}>${Number(row.predicted_price).toLocaleString()}</td>
-                  <td style={{ padding: '10px' }}>
-                    {row.actual_price ? `$${Number(row.actual_price).toLocaleString()}` : 'N/A'}
-                  </td>
-                  <td style={{ padding: '10px' }}>{row.model_name || 'N/A'}</td>
-                </tr>
-              ))}
+              {backtestData.map((row, index) => {
+                const pred = Number(row.predicted_price || 0);
+                const actual = row.actual_price ? Number(row.actual_price) : null;
+                const diff = actual !== null ? (pred - actual).toFixed(2) : null;
+
+                return (
+                  <tr key={row.id || index} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '10px' }}>{row.date}</td>
+                    <td style={{ padding: '10px', textTransform: 'uppercase', fontWeight: 'bold' }}>
+                      {row.model_used || 'N/A'}
+                    </td>
+                    <td style={{ padding: '10px' }}>${pred.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td style={{ padding: '10px' }}>
+                      {actual !== null ? `$${actual.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : 'N/A'}
+                    </td>
+                    <td 
+                      style={{ 
+                        padding: '10px', 
+                        fontWeight: 'bold',
+                        color: diff === null ? '#666' : diff >= 0 ? '#16a34a' : '#dc2626' 
+                      }}
+                    >
+                      {diff !== null ? (diff >= 0 ? `+${diff}` : diff) : 'N/A'}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
