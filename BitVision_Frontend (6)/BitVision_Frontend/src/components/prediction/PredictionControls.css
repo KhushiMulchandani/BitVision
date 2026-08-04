@@ -1,0 +1,124 @@
+.prediction-controls{
+
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+.controls-header{
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.controls-badge{
+
+    width:max-content;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:#EEF8F1;
+
+    color:#62B27D;
+
+    font-size:.82rem;
+
+    font-weight:600;
+}
+
+.controls-header h2{
+
+    font-size:1.45rem;
+
+    color:#18213A;
+
+    font-weight:700;
+}
+
+.controls-header p{
+
+    color:#667085;
+
+    font-size:.93rem;
+
+    line-height:1.6;
+}
+
+.control-group{
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.control-group label{
+
+    font-size:.9rem;
+
+    color:#18213A;
+
+    font-weight:600;
+}
+
+.control-group select,
+.control-group input{
+
+    width:100%;
+
+    padding:14px 16px;
+
+    border-radius:14px;
+
+    border:1px solid #E3E8EF;
+
+    background:white;
+
+    font-size:.95rem;
+
+    color:#18213A;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+.control-group select:focus,
+.control-group input:focus{
+
+    border-color:#62B27D;
+
+    box-shadow:0 0 0 4px rgba(98,178,125,.12);
+}
+
+.generate-btn{
+
+    margin-top:10px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#62B27D;
+
+    color:white;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.generate-btn:hover{
+
+    background:#4FA36B;
+
+    transform:translateY(-2px);
+}

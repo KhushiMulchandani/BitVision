@@ -1,0 +1,279 @@
+/* ==========================================
+   SELECTED MODEL
+========================================== */
+
+.selected-model-card{
+
+    background:#FFFFFF;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    height:100%;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.selected-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.selected-header h2{
+
+    font-size:1.05rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+    margin-bottom:4px;
+
+}
+
+.selected-header p{
+
+    font-size:.82rem;
+
+    color:#667085;
+
+    line-height:1.5;
+
+}
+
+.selected-badge{
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+/* ==========================================
+   MODEL INFO
+========================================== */
+
+.selected-model{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:16px;
+
+    border-radius:16px;
+
+    background:#FAFCFB;
+
+    border:1px solid #EEF2EF;
+
+}
+
+.selected-icon{
+
+    font-size:1.9rem;
+
+    color:#5FA777;
+
+}
+
+.selected-model h3{
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+    margin-bottom:4px;
+
+}
+
+.selected-model span{
+
+    font-size:.82rem;
+
+    color:#667085;
+
+}
+
+/* ==========================================
+   PERFORMANCE TABLE
+========================================== */
+
+.performance-table{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.performance-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px 0;
+
+    border-bottom:1px solid #EEF2EF;
+
+}
+
+.performance-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.performance-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-size:.84rem;
+
+    color:#667085;
+
+}
+
+.performance-title svg{
+
+    color:#5FA777;
+
+    font-size:.95rem;
+
+}
+
+.performance-row strong{
+
+    font-size:.88rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.model-footer{
+
+    margin-top:auto;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding-top:16px;
+
+    border-top:1px solid #EEF2EF;
+
+}
+
+.model-footer span{
+
+    font-size:.82rem;
+
+    color:#667085;
+
+}
+
+.model-footer strong{
+
+    font-size:.85rem;
+
+    color:#16C784;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   HOVER
+========================================== */
+
+.selected-model-card{
+
+    transition:.25s ease;
+
+}
+
+.selected-model-card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 26px rgba(15,23,42,.06);
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+    .selected-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .selected-model{
+
+        padding:14px;
+
+    }
+
+    .selected-model-card{
+
+        padding:18px;
+
+    }
+
+}

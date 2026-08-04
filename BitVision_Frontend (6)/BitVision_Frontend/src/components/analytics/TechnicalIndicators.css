@@ -1,0 +1,144 @@
+.technical-indicators{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    box-shadow:0 8px 24px rgba(15,23,42,.04);
+
+}
+
+.technical-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.technical-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+    margin-bottom:4px;
+
+}
+
+.technical-header p{
+
+    color:#667085;
+
+    font-size:.82rem;
+
+}
+
+.technical-header span{
+
+    font-size:.75rem;
+
+    color:#5FA777;
+
+    background:#EDF8EF;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+}
+
+.table-head{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr;
+
+    padding-bottom:12px;
+
+    border-bottom:1px solid #EEF2EF;
+
+    color:#98A2B3;
+
+    font-size:.78rem;
+
+    font-weight:600;
+
+}
+
+.table-row{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr;
+
+    align-items:center;
+
+    padding:14px 0;
+
+    border-bottom:1px solid #F2F4F5;
+
+}
+
+.table-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.table-row span{
+
+    color:#18213A;
+
+    font-size:.88rem;
+
+}
+
+.table-row strong{
+
+    font-size:.88rem;
+
+    font-weight:600;
+
+    color:#18213A;
+
+}
+
+.table-row small{
+
+    justify-self:end;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+}
+
+.positive{
+
+    color:#16C784;
+
+}
+
+.warning{
+
+    color:#F59E0B;
+
+}
+
+.negative{
+
+    color:#EF4444;
+
+}
+.technical-indicators{
+    height:100%;
+}

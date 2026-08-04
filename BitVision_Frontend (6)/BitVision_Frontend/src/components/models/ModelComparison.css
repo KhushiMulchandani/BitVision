@@ -1,0 +1,191 @@
+/* ==========================================
+   MODEL COMPARISON
+========================================== */
+
+.model-comparison{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.comparison-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:18px;
+
+}
+
+.comparison-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+    font-weight:600;
+
+    margin-bottom:4px;
+
+}
+
+.comparison-header p{
+
+    color:#667085;
+
+    font-size:.82rem;
+
+}
+
+.comparison-badge{
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.comparison-table{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.comparison-head{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr;
+
+    padding-bottom:12px;
+
+    border-bottom:1px solid #EEF2EF;
+
+    color:#98A2B3;
+
+    font-size:.76rem;
+
+    font-weight:600;
+
+}
+
+.comparison-row{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr;
+
+    align-items:center;
+
+    padding:15px 0;
+
+    border-bottom:1px solid #F3F5F7;
+
+    transition:.25s;
+
+}
+
+.comparison-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.comparison-row:hover{
+
+    background:#FAFCFB;
+
+}
+
+.model-name{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#18213A;
+
+    font-size:.88rem;
+
+    font-weight:500;
+
+}
+
+.model-name svg{
+
+    color:#5FA777;
+
+}
+
+.comparison-row strong{
+
+    color:#18213A;
+
+    font-size:.86rem;
+
+}
+
+.model-status span{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:.78rem;
+
+    color:#16C784;
+
+    font-weight:600;
+
+}
+
+.best{
+
+    color:#F59E0B !important;
+
+}
+
+.active-model{
+
+    background:#FAFCFB;
+
+    border-radius:12px;
+
+    padding-left:10px;
+
+    padding-right:10px;
+
+}

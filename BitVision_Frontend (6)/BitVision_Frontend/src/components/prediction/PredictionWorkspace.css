@@ -1,0 +1,118 @@
+/* ==========================================
+   PREDICTION WORKSPACE
+========================================== */
+
+.prediction-workspace{
+
+    max-width:1300px;
+
+    margin:28px auto 60px;
+
+    display:grid;
+
+    grid-template-columns:340px 1fr;
+
+    gap:22px;
+
+    align-items:start;
+
+}
+
+/* ==========================================
+   COMMON CARD STYLE
+========================================== */
+
+.workspace-left,
+.workspace-right{
+
+    background:#FFFFFF;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+    transition:.25s ease;
+
+    height:100%;
+
+}
+
+/* ==========================================
+   HOVER
+========================================== */
+
+.workspace-left:hover,
+.workspace-right:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 26px rgba(15,23,42,.06);
+
+}
+
+/* ==========================================
+   PRICE INFO
+========================================== */
+
+.price-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-top:10px;
+
+}
+
+.price-up{
+
+    color:#16C784;
+
+    font-weight:600;
+
+    font-size:.86rem;
+
+}
+
+.price-down{
+
+    color:#EF4444;
+
+    font-weight:600;
+
+    font-size:.86rem;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:1100px){
+
+    .prediction-workspace{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .workspace-left,
+    .workspace-right{
+
+        padding:18px;
+
+        border-radius:18px;
+
+    }
+
+}
