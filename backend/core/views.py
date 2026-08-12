@@ -11,7 +11,7 @@ from .serializers import OHLCVSerializer,FeatureSerializer,PredictionSerializer,
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from decimal import Decimal
+from decimal import Decimal,InvalidOperation
 import requests
 
 class OHLCVFilter(filters.FilterSet):
