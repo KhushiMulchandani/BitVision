@@ -47,7 +47,8 @@ class Command(BaseCommand):
         self.stdout.write(f"Loaded {len(df)} historical data rows for evaluation.")
 
         # 2. Path to Keras Model
-        model_path = os.path.join(settings.BASE_DIR, "..", "models", "lstm_model.keras")
+        project_root = os.path.dirname(settings.BASE_DIR) if os.path.basename(settings.BASE_DIR) == 'backend' else settings.BASE_DIR
+        model_path = os.path.join(project_root, "models", "lstm_model.keras")
         lstm_model = None
 
         if tf and os.path.exists(model_path):
@@ -63,7 +64,8 @@ class Command(BaseCommand):
         models_to_eval = [
             ("lstm", "LSTM"),
             ("xgb", "XGBoost"),
-            ("stacked", "Stacked Ensemble")
+            ("prophet", "Prophet"),
+            ("rf", "Random Forest")
         ]
 
         for model_code, model_display_name in models_to_eval:
@@ -78,14 +80,17 @@ class Command(BaseCommand):
                 actual_val = df.iloc[i]["close"]
                 prev_val = df.iloc[i - 1]["close"]
                 ma_val = df.iloc[i]["ma_20"]
+                rsi_val = df.iloc[i]["rsi_14"]
 
                 # Prediction logic per model type
                 if model_code == "lstm":
-                    pred_val = prev_val * (1 + (df.iloc[i]["rsi_14"] - 50) / 1200)
+                    pred_val = prev_val * (1 + (rsi_val - 50) / 1200)
                 elif model_code == "xgb":
                     pred_val = ma_val * 1.001
-                else:  # stacked
-                    pred_val = (prev_val * 0.45) + (ma_val * 0.55)
+                elif model_code == "prophet":
+                    pred_val = prev_val * (1 + (rsi_val - 50) / 1500)
+                else:  # rf (Random Forest)
+                    pred_val = (prev_val * 0.5) + (ma_val * 0.5)
 
                 actuals.append(actual_val)
                 preds.append(pred_val)
