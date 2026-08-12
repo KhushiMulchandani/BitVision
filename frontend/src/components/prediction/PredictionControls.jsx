@@ -1,74 +1,60 @@
+import React, { useState } from "react";
 import "./PredictionControls.css";
 
-function PredictionControls() {
+function PredictionControls({ onRefresh }) {
+  const [horizon, setHorizon] = useState("1 Day");
+  const [model, setModel] = useState("lstm");
+  const [history, setHistory] = useState("90 Days");
+
+  const handleGenerate = (e) => {
+    e.preventDefault();
+    // Trigger callback or fetch fresh evaluation parameters if desired
+    if (onRefresh) {
+      onRefresh({ horizon, model, history });
+    }
+  };
+
   return (
     <div className="prediction-controls">
-
       <div className="controls-header">
-
-        <span className="controls-badge">
-          AI Configuration
-        </span>
-
+        <span className="controls-badge">AI Configuration</span>
         <h2>Prediction Setup</h2>
-
-        <p>
-          Configure your forecasting preferences before
-          generating a prediction.
-        </p>
-
+        <p>Configure your forecasting preferences before generating a prediction.</p>
       </div>
 
-      <div className="control-group">
+      <form onSubmit={handleGenerate}>
+        <div className="control-group">
+          <label>Forecast Horizon</label>
+          <select value={horizon} onChange={(e) => setHorizon(e.target.value)}>
+            <option>1 Day</option>
+            <option>7 Days</option>
+            <option>30 Days</option>
+          </select>
+        </div>
 
-        <label>Forecast Horizon</label>
+        <div className="control-group">
+          <label>AI Model</label>
+          <select value={model} onChange={(e) => setModel(e.target.value)}>
+            <option value="stacked">Ensemble Model</option>
+            <option value="xgb">XGBoost</option>
+            <option value="lstm">LSTM</option>
+          </select>
+        </div>
 
-        <select>
-          <option>1 Day</option>
-          <option>7 Days</option>
-          <option>30 Days</option>
-        </select>
+        <div className="control-group">
+          <label>Historical Data</label>
+          <select value={history} onChange={(e) => setHistory(e.target.value)}>
+            <option>30 Days</option>
+            <option>90 Days</option>
+            <option>180 Days</option>
+            <option>365 Days</option>
+          </select>
+        </div>
 
-      </div>
-
-      <div className="control-group">
-
-        <label>AI Model</label>
-
-        <select>
-          <option>Ensemble Model</option>
-          <option>Random Forest</option>
-          <option>XGBoost</option>
-          <option>LSTM</option>
-        </select>
-
-      </div>
-
-      <div className="control-group">
-
-        <label>Historical Data</label>
-
-        <select>
-          <option>30 Days</option>
-          <option selected>90 Days</option>
-          <option>180 Days</option>
-          <option>365 Days</option>
-        </select>
-
-      </div>
-
-      <div className="control-group">
-
-        <label>Prediction Date</label>
-
-        <input type="date" />
-
-      </div>
-
-      <button className="generate-btn">
-        Generate Prediction
-      </button>
-
+        <button type="submit" className="generate-btn">
+          Generate Prediction
+        </button>
+      </form>
     </div>
   );
 }
