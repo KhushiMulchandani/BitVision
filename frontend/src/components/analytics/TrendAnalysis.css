@@ -1,0 +1,577 @@
+.trend-analysis{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+}
+
+.trend-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.trend-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+    margin-bottom:4px;
+
+}
+
+.trend-header p{
+
+    color:#667085;
+
+    font-size:.82rem;
+
+}
+
+.live-tag{
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.75rem;
+
+    font-weight:600;
+
+}
+
+.trend-body{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.trend-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:13px 0;
+
+    border-bottom:1px solid #EEF2EF;
+
+}
+
+.trend-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.trend-row span{
+
+    color:#667085;
+
+    font-size:.84rem;
+
+}
+
+.trend-row strong{
+
+    color:#18213A;
+
+    font-size:.88rem;
+
+    font-weight:600;
+
+}
+
+.ai-signal{
+
+    margin-top:22px;
+
+    padding:18px;
+
+    border:1px solid #EEF2EF;
+
+    border-radius:16px;
+
+    background:#FAFCFB;
+
+}
+
+.signal-label{
+
+    font-size:.75rem;
+
+    color:#98A2B3;
+
+    display:block;
+
+    margin-bottom:10px;
+
+}
+
+
+
+.signal-main h3{
+
+    font-size:1.5rem;
+
+    color:#18213A;
+
+    font-weight:700;
+
+}
+
+.signal-main span{
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+}
+
+.signal-footer{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:14px;
+
+    border-top:1px solid #EEF2EF;
+
+    padding-top:14px;
+
+}
+
+.signal-footer small{
+
+    display:block;
+
+    color:#98A2B3;
+
+    font-size:.72rem;
+
+    margin-bottom:5px;
+
+}
+
+.signal-footer strong{
+
+    font-size:.85rem;
+
+    color:#18213A;
+
+}
+
+.green{
+
+    color:#16C784 !important;
+
+}
+
+.orange{
+
+    color:#F59E0B !important;
+
+}
+.signal-main{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+/* BUY Badge */
+
+.signal-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 18px;
+
+    background:#EDF8EF;
+
+    color:#16C784;
+
+    border-radius:999px;
+
+    font-size:.82rem;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+}
+
+/* Confidence */
+
+.signal-confidence{
+
+    text-align:right;
+
+}
+
+.signal-confidence h4{
+
+    font-size:1.35rem;
+
+    color:#18213A;
+
+    font-weight:700;
+
+    line-height:1;
+
+}
+/* ==========================================
+   TREND ANALYSIS
+========================================== */
+
+.trend-analysis{
+
+    background:#fff;
+
+    border:1px solid #E8ECEA;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    box-shadow:0 8px 22px rgba(15,23,42,.04);
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.trend-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.trend-header h2{
+
+    font-size:1.05rem;
+
+    color:#18213A;
+
+    font-weight:600;
+
+    margin-bottom:4px;
+
+}
+
+.trend-header p{
+
+    font-size:.8rem;
+
+    color:#667085;
+
+}
+
+.live-tag{
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.trend-table{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.trend-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #EEF2EF;
+
+}
+
+.trend-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.trend-row span{
+
+    color:#667085;
+
+    font-size:.83rem;
+
+}
+
+.trend-row strong{
+
+    color:#18213A;
+
+    font-size:.86rem;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   AI VERDICT
+========================================== */
+
+.verdict-card{
+
+    margin-top:18px;
+
+    background:#FAFCFB;
+
+    border:1px solid #EEF2EF;
+
+    border-radius:16px;
+
+    padding:16px;
+
+}
+
+.verdict-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:14px;
+
+}
+
+.verdict-top h3{
+
+    font-size:.92rem;
+
+    color:#18213A;
+
+    font-weight:600;
+
+}
+
+/* BUY PILL */
+
+.buy-pill{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#EDF8EF;
+
+    color:#16C784;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    font-size:.76rem;
+
+    font-weight:700;
+
+    letter-spacing:.3px;
+
+}
+
+/* ==========================================
+   VERDICT TABLE
+========================================== */
+
+.verdict-table{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.verdict-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:10px 0;
+
+    border-bottom:1px solid #EEF2EF;
+
+}
+
+.verdict-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.verdict-row span{
+
+    color:#667085;
+
+    font-size:.82rem;
+
+}
+
+.verdict-row strong{
+
+    color:#18213A;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.powered-by{
+
+    margin-top:14px;
+
+    padding-top:12px;
+
+    border-top:1px solid #EEF2EF;
+
+    text-align:center;
+
+    font-size:.72rem;
+
+    color:#98A2B3;
+
+}
+
+.powered-by span{
+
+    color:#5FA777;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   COLORS
+========================================== */
+
+.green{
+
+    color:#16C784 !important;
+
+}
+
+.orange{
+
+    color:#F59E0B !important;
+
+}
+
+.red{
+
+    color:#EF4444 !important;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+.trend-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+}
+
+.verdict-top{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:10px;
+
+}
+
+}
+.signal-confidence small{
+
+    color:#98A2B3;
+
+    font-size:.72rem;
+
+}
+.trend-analysis{
+    height:100%;
+}

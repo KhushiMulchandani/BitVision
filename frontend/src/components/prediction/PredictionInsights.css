@@ -1,0 +1,206 @@
+.bullish{
+    border-left:5px solid #2EAF62;
+}
+
+.bearish{
+    border-left:5px solid #E85D5D;
+}
+
+.neutral{
+    border-left:5px solid #4B6CB7;
+}
+/* ===================================
+   AI INSIGHTS
+=================================== */
+
+.prediction-insights{
+
+    margin:80px 0;
+
+}
+
+/* Header */
+
+.insights-header{
+
+    margin-bottom:35px;
+
+}
+
+.insights-badge{
+
+    display:inline-flex;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    background:#EDF8EF;
+
+    color:#5FA777;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+    margin-bottom:16px;
+
+}
+
+.insights-header h2{
+
+    font-size:2rem;
+
+    color:#18213A;
+
+    margin-bottom:10px;
+
+}
+
+.insights-header p{
+
+    color:#667794;
+
+    font-size:1rem;
+
+}
+
+/* Grid */
+
+.insights-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:22px;
+
+}
+
+/* Cards */
+
+.insight-card{
+
+    background:#ffffff;
+
+    border:1px solid #E8EEEA;
+
+    border-radius:22px;
+
+    padding:28px;
+
+    transition:.3s ease;
+
+    box-shadow:
+        0 10px 30px rgba(15,23,42,.05);
+
+}
+
+.insight-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+        0 20px 40px rgba(15,23,42,.08);
+
+}
+
+.insight-card svg{
+
+    font-size:1.4rem;
+
+    margin-bottom:18px;
+
+}
+
+.insight-card h3{
+
+    font-size:1.15rem;
+
+    color:#18213A;
+
+    margin-bottom:12px;
+
+}
+
+.insight-card p{
+
+    color:#667794;
+
+    line-height:1.7;
+
+    font-size:.95rem;
+
+}
+
+/* Colors */
+
+.positive-card{
+
+    border-top:5px solid #16C784;
+
+}
+
+.positive-card svg{
+
+    color:#16C784;
+
+}
+
+.negative-card{
+
+    border-top:5px solid #E85D5D;
+
+}
+
+.negative-card svg{
+
+    color:#E85D5D;
+
+}
+
+.neutral-card{
+
+    border-top:5px solid #5FA777;
+
+}
+
+.neutral-card svg{
+
+    color:#5FA777;
+
+}
+
+.info-card{
+
+    border-top:5px solid #4F7FFF;
+
+}
+
+.info-card svg{
+
+    color:#4F7FFF;
+
+}
+
+/* Responsive */
+
+@media(max-width:1100px){
+
+    .insights-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    .insights-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
