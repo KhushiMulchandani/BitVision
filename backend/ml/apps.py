@@ -5,9 +5,5 @@ class MlConfig(AppConfig):
     name = 'ml'
 
     def ready(self):
-        # Trigger model loading on startup
-        from .model_loader import MLModelLoader
-        try:
-            MLModelLoader.get_lstm_model()
-        except Exception as e:
-            print(f"Warning: Could not preload ML model on startup: {e}")
+        # Models are loaded lazily on first inference request to keep startup fast
+        pass
