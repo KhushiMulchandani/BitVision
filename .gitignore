@@ -9,3 +9,13 @@ db.sqlite3
 .DS_Store
 models/*.keras
 models/*.pkl
+
+
+.env
+.ipynb_checkpoints/
+BitVision_Completion_Checklist.md
+Bitcoin_Prediction_Sem4_21Days.html
+tracked.txt
+untracked.txt
+frontend/src.zip
+models/
