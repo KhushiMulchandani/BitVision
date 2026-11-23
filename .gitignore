@@ -10,7 +10,6 @@ db.sqlite3
 models/*.keras
 models/*.pkl
 
-
 .env
 .ipynb_checkpoints/
 BitVision_Completion_Checklist.md
@@ -19,3 +18,7 @@ tracked.txt
 untracked.txt
 frontend/src.zip
 models/
+
+*.sqlite3.bak
+*.bak
+*.zip

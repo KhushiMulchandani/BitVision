@@ -1,6 +1,22 @@
+from datetime import datetime, timezone
+
 import pandas as pd
+import requests
 from django.core.management.base import BaseCommand
 from core.models import OHLCV, Feature
+
+
+FNG_URL = "https://api.alternative.me/fng/?limit=0&format=json"
+
+
+def fetch_fear_greed():
+    """Full Fear & Greed history as {date: value}. Starts Feb 2018. Returns {} if the API is unreachable."""
+    try:
+        data = requests.get(FNG_URL, timeout=30).json()["data"]
+        return {datetime.fromtimestamp(int(d["timestamp"]), timezone.utc).date(): float(d["value"]) for d in data}
+    except Exception as exc:  # network or format problem: keep going without sentiment
+        print(f"Warning: could not fetch Fear & Greed history ({exc}). fg_index will be empty.")
+        return {}
 
 
 class Command(BaseCommand):
@@ -17,6 +33,7 @@ class Command(BaseCommand):
 
         df = pd.DataFrame(list(qs))
         df.set_index("date", inplace=True)
+        df = df.astype(float)  # DecimalField values arrive as Decimal objects
 
         self.stdout.write(self.style.NOTICE(f"Calculating technical indicators for {len(df)} records..."))
 
@@ -46,6 +63,11 @@ class Command(BaseCommand):
         df["lag_1"] = df["close"].shift(1)
         df["lag_7"] = df["close"].shift(7)
 
+        # 6b. Fear & Greed index (Alternative.me, from 2018-02-01; earlier days stay empty)
+        fg = fetch_fear_greed()
+        df["fg_index"] = [fg.get(d) for d in df.index]
+        self.stdout.write(self.style.NOTICE(f"Fear & Greed values matched: {int(df['fg_index'].notna().sum())} days"))
+
         # 7. Bulk Save to Feature Model
         self.stdout.write(self.style.NOTICE("Saving calculated features into database..."))
 
@@ -61,7 +83,7 @@ class Command(BaseCommand):
                     ma_50=row["ma_50"] if pd.notna(row["ma_50"]) else None,
                     bollinger_upper=row["bollinger_upper"] if pd.notna(row["bollinger_upper"]) else None,
                     bollinger_lower=row["bollinger_lower"] if pd.notna(row["bollinger_lower"]) else None,
-                    fg_index=None,  # External Fear & Greed index can be updated separately
+                    fg_index=row["fg_index"] if pd.notna(row["fg_index"]) else None,
                     lag_1=row["lag_1"] if pd.notna(row["lag_1"]) else None,
                     lag_7=row["lag_7"] if pd.notna(row["lag_7"]) else None,
                 )
