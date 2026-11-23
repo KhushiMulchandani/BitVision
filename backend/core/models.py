@@ -35,9 +35,13 @@ class Prediction(models.Model):
     date = models.DateField()
     predicted_price = models.DecimalField(max_digits=12, decimal_places=2)
     actual_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    model_used = models.CharField(max_length=20)  # "rf" / "xgb" / "prophet" / "lstm"
+    # model_used = models.CharField(max_length=20)  # "rf" / "xgb" / "prophet" / "lstm"
+    # confidence = models.FloatField(null=True, blank=True)
+    model_used = models.CharField(max_length=20)  # "rf" / "xgb" / "lstm" / "stacked"
     confidence = models.FloatField(null=True, blank=True)
-
+    lower_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    upper_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    
     class Meta:
         unique_together = ("date", "model_used")
 

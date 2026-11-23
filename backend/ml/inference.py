@@ -1,29 +1,55 @@
+"""
+Live prediction for the next day, using the saved artifacts and the same
+feature code as training. The ONLY inference path in the project: used by
+`manage.py predict_tomorrow` and (later) by /api/predict/.
+"""
 import numpy as np
-from .model_loader import MLModelLoader
-from .preprocessing import engineer_features
+import pandas as pd
 
-def predict_next_day_price(recent_data_df, model_type='lstm'):
-    # 1. Prepare data features and get today's closing price
-    model_input, todays_close = engineer_features(recent_data_df)
-    
-    # 2. Select model
-    if model_type == 'lstm':
-        model = MLModelLoader.get_lstm_model()
-        # Uncomment below if your LSTM strictly requires a 3D tensor shape: (samples, time_steps, features)
-        # model_input = model_input.reshape(1, 1, model_input.shape[1])
-    else:
-        model = MLModelLoader.get_rf_model()
-        
-    # 3. Predict return
-    predicted_return = model.predict(model_input)[0]
-    if isinstance(predicted_return, (list, np.ndarray)):
-        predicted_return = float(predicted_return[0])
-        
-    # 4. Inverse transform to target currency price
-    predicted_price = todays_close * (1 + predicted_return)
-    
+from .dataset import load_frame
+from .features import SEQ_LEN, interval_from_return
+from .model_loader import MLModelLoader
+
+
+def predict_latest() -> dict:
+    df = load_frame()
+    latest = df.iloc[-1]
+    close = float(latest["close"])
+    based_on = pd.to_datetime(latest["date"])
+    target_date = (based_on + pd.Timedelta(days=1)).date()
+
+    rf = MLModelLoader.get_rf_model()
+    xgb = MLModelLoader.get_xgb_model()
+    sc = MLModelLoader.get_scaler()
+    meta = MLModelLoader.get_meta_model()
+    lstm = MLModelLoader.get_lstm_model()
+
+    x_tab = pd.DataFrame([latest[rf["features"]].astype(float).to_dict()])
+    r_rf = float(rf["model"].predict(x_tab)[0])
+    r_xgb = float(xgb["model"].predict(x_tab[xgb["features"]])[0])
+
+    window = df[sc["features"]].values[-sc["seq_len"]:].astype(np.float32)
+    if len(window) < sc["seq_len"]:
+        raise ValueError("Not enough history for the LSTM window")
+    window = sc["scaler"].transform(window).reshape(1, sc["seq_len"], len(sc["features"]))
+    r_lstm = float(lstm.predict(window, verbose=0).flatten()[0]) * sc["ret_std"]
+
+    r_stacked = float(meta["model"].predict(np.array([[r_rf, r_xgb, r_lstm]]) * 100.0)[0]) / 100.0
+
+    out = {}
+    for code, r in [("rf", r_rf), ("xgb", r_xgb), ("lstm", r_lstm), ("stacked", r_stacked)]:
+        price, lo, hi = interval_from_return(close, r, meta["sigma"][code], meta["z"])
+        out[code] = {
+            "predicted_return": r,
+            "predicted_price": price,
+            "lower_price": lo,
+            "upper_price": hi,
+            "confidence": meta["coverage"][code],   # share of test days inside the interval
+        }
     return {
-        "todays_close": todays_close,
-        "predicted_return_pct": round(predicted_return * 100, 2),
-        "predicted_price": round(predicted_price, 2)
+        "based_on_date": str(based_on.date()),
+        "date": str(target_date),               # the day being predicted
+        "current_close": close,
+        "direction": "up" if r_stacked > 0 else "down",
+        "models": out,
     }
