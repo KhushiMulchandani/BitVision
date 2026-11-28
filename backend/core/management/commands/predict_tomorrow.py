@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 
 from core.models import OHLCV, Prediction
 from ml.inference import predict_latest
+from core.services import save_prediction_result
 
 
 class Command(BaseCommand):
@@ -20,17 +21,7 @@ class Command(BaseCommand):
 
         # 2. Predict the next day
         result = predict_latest()
-        for code, m in result["models"].items():
-            Prediction.objects.update_or_create(
-                date=result["date"], model_used=code,
-                defaults={
-                    "predicted_price": round(m["predicted_price"], 2),
-                    "actual_price": None,
-                    "confidence": m["confidence"],
-                    "lower_price": round(m["lower_price"], 2),
-                    "upper_price": round(m["upper_price"], 2),
-                },
-            )
+        save_prediction_result(result)
         s = result["models"]["stacked"]
         self.stdout.write(self.style.SUCCESS(
             f"{result['date']}: ${s['predicted_price']:,.2f} ({result['direction']}) "
