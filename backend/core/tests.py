@@ -78,6 +78,15 @@ class PredictViewTests(APITestCase):
                        return_value={"meta_weights": {"rf": 0.0, "xgb": 0.32, "lstm": 0.27}})
         p.start()
         self.addCleanup(p.stop)
+        p2 = mock.patch("core.services._today", return_value=date(2026, 11, 21))
+        p2.start()
+        self.addCleanup(p2.stop)
+
+    def test_stale_when_prediction_date_is_in_the_past(self):
+        self._store(date(2026, 11, 21))
+        with mock.patch("core.services._today", return_value=date(2026, 11, 28)):
+            r = self.client.get(self.url)
+        self.assertTrue(r.data["stale"])
 
     def _store(self, day, stacked=80150):
         for code, price in {**PRICES, "stacked": stacked}.items():

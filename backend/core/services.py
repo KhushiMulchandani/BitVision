@@ -4,6 +4,7 @@ from datetime import timedelta
 from ml.inference import predict_latest
 from ml.model_loader import MLModelLoader, ModelsNotTrained
 from .models import OHLCV, Prediction
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +14,8 @@ MODEL_LABELS = {
     "stacked": "Stacked Ensemble (Ridge)", "baseline": "Naive (tomorrow = today)",
 }
 
-
+def _today():
+    return timezone.now().date()
 class PredictionUnavailable(Exception):
     pass
 
@@ -71,6 +73,7 @@ def get_prediction_payload():
         stale = True
 
     pred_date = rows["stacked"].date
+    stale = stale or pred_date < _today()
     base = OHLCV.objects.filter(date=pred_date - timedelta(days=1)).first() or latest
     close = float(base.close)
     stacked = _entry(rows["stacked"])
