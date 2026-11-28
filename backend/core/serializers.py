@@ -3,9 +3,13 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 
-from .models import OHLCV, Feature, Prediction, ModelMetric, Portfolio, Alert
 from .services import MODEL_LABELS
 
+from decimal import Decimal
+from .models import OHLCV, Feature, Prediction, ModelMetric, Portfolio, Alert, Trade
+
+STARTING_CASH = Decimal("10000.00")
+CENT = Decimal("0.01")
 
 class OHLCVSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,18 +49,66 @@ class ModelMetricSerializer(serializers.ModelSerializer):
             return "Directional accuracy here is the share of up-days, not a model's call."
         return None
 
-
 class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Portfolio
-        fields = "__all__"
+        fields = ("cash_balance", "btc_holdings", "updated_at")
+
+    def to_representation(self, obj):
+        data = super().to_representation(obj)
+        cash = Decimal(str(obj.cash_balance))
+        btc = Decimal(str(obj.btc_holdings))
+        latest = OHLCV.objects.order_by("-date").first()
+        price = latest.close if latest else None
+        holdings = (btc * price).quantize(CENT) if price else None
+        total = (cash + holdings).quantize(CENT) if holdings is not None else None
+        data.update({
+            "currency": "USD",
+            "starting_balance": str(STARTING_CASH),
+            "latest_price": str(price) if price else None,
+            "holdings_value": str(holdings) if holdings is not None else None,
+            "total_value": str(total) if total is not None else None,
+            "profit_loss": str((total - STARTING_CASH).quantize(CENT)) if total is not None else None,
+        })
+        return data
+
+
+class TradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trade
+        fields = ("id", "side", "usd_amount", "btc_amount", "price", "created_at")
+
+
+class TradeRequestSerializer(serializers.Serializer):
+    action = serializers.CharField()
+    amount_usd = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=Decimal("0.01"), required=False)
+    amount_inr = serializers.DecimalField(max_digits=12, decimal_places=2, min_value=Decimal("0.01"), required=False)  # deprecated alias
+
+    def validate_action(self, value):
+        value = value.lower().strip()
+        if value not in ("buy", "sell"):
+            raise serializers.ValidationError("Must be 'buy' or 'sell'.")
+        return value
+
+    def validate(self, attrs):
+        usd, legacy = attrs.get("amount_usd"), attrs.get("amount_inr")
+        if usd is None and legacy is None:
+            raise serializers.ValidationError({"amount_usd": "This field is required."})
+        attrs["amount"] = usd if usd is not None else legacy
+        attrs["used_legacy"] = usd is None
+        return attrs
 
 
 class AlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
-        fields = "__all__"
+        fields = ("id", "target_price", "direction", "is_triggered", "triggered_at", "created_at")
+        read_only_fields = ("is_triggered", "triggered_at", "created_at")
 
+    def validate_target_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Must be greater than zero.")
+        return value
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -3,15 +3,11 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import generics
 from datetime import timedelta
-from django.utils import timezone
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
-from .models import OHLCV,Feature,Prediction,ModelMetric,Portfolio,Alert
-from .serializers import (OHLCVSerializer, FeatureSerializer, PredictionSerializer, ModelMetricSerializer,
-                          PortfolioSerializer, AlertSerializer, RegisterSerializer, UserSerializer)
+from .models import OHLCV,Feature,Prediction,ModelMetric,Portfolio,Alert,Trade
 from rest_framework.views import APIView
 from rest_framework import status
-from decimal import Decimal,InvalidOperation
 import requests
 
 from django.db.models import Case, IntegerField, Max, When
@@ -21,7 +17,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .services import PredictionUnavailable, get_prediction_payload
-
+from .serializers import (OHLCVSerializer, FeatureSerializer, PredictionSerializer, ModelMetricSerializer,
+                          PortfolioSerializer, AlertSerializer, RegisterSerializer, UserSerializer,
+                          TradeSerializer, TradeRequestSerializer)
+from .trading import TradeError, execute_trade
 
 
 class OHLCVFilter(filters.FilterSet):
@@ -235,158 +234,215 @@ class MeView(APIView):
         return Response(UserSerializer(request.user).data)
 
     
+# class PortfolioView(APIView):
+#     """
+#     GET /api/portfolio/ - Retrieve current user portfolio (auto-creates if missing).
+#     POST /api/portfolio/ - Buy/Sell BTC using paper trading cash.
+#     """
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+#         try:
+#             portfolio, created = Portfolio.objects.get_or_create(user=request.user)
+#             serializer = PortfolioSerializer(portfolio)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response(
+#                 {"error": "Could not retrieve portfolio", "details": str(e)},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             )
+
+#     def post(self, request):
+#         try:
+#             portfolio, _ = Portfolio.objects.get_or_create(user=request.user)
+#             action = request.data.get("action")
+#             amount_inr = request.data.get("amount_inr")
+
+#             # 1. Required Field Validation
+#             if not action or amount_inr is None:
+#                 return Response(
+#                     {"error": "Both 'action' and 'amount_inr' fields are required."},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+
+#             # 2. Action Field Validation
+#             action = str(action).lower().strip()
+#             if action not in ["buy", "sell"]:
+#                 return Response(
+#                     {"error": "Invalid action. Allowed choices are 'buy' or 'sell'."},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+
+#             # 3. Numeric Amount & Non-negative Validation
+#             try:
+#                 amount_inr = Decimal(str(amount_inr))
+#                 if amount_inr <= Decimal("0"):
+#                     return Response(
+#                         {"error": "Amount must be greater than zero."},
+#                         status=status.HTTP_400_BAD_REQUEST,
+#                     )
+#             except (InvalidOperation, TypeError, ValueError):
+#                 return Response(
+#                     {"error": "Invalid amount provided. Must be a positive numeric value."},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+
+#             # 4. Fetch Market Data
+#             latest_entry = OHLCV.objects.order_by("-date").first()
+#             if not latest_entry or latest_entry.close <= Decimal("0"):
+#                 return Response(
+#                     {"error": "Market data currently unavailable for trading calculation."},
+#                     status=status.HTTP_503_SERVICE_UNAVAILABLE,
+#                 )
+
+#             btc_price = latest_entry.close
+
+#             # 5. Trading Execution
+#             if action == "buy":
+#                 if portfolio.cash_balance < amount_inr:
+#                     return Response(
+#                         {
+#                             "error": "Insufficient funds.",
+#                             "current_balance": str(portfolio.cash_balance),
+#                             "requested": str(amount_inr),
+#                         },
+#                         status=status.HTTP_400_BAD_REQUEST,
+#                     )
+#                 btc_purchased = amount_inr / btc_price
+#                 portfolio.cash_balance -= amount_inr
+#                 portfolio.btc_holdings += btc_purchased
+#                 portfolio.save()
+
+#             elif action == "sell":
+#                 btc_to_sell = amount_inr / btc_price
+#                 if portfolio.btc_holdings < btc_to_sell:
+#                     return Response(
+#                         {
+#                             "error": "Insufficient BTC holdings to complete sell order.",
+#                             "current_holdings": str(portfolio.btc_holdings),
+#                             "requested_btc": str(btc_to_sell),
+#                         },
+#                         status=status.HTTP_400_BAD_REQUEST,
+#                     )
+#                 portfolio.cash_balance += amount_inr
+#                 portfolio.btc_holdings -= btc_to_sell
+#                 portfolio.save()
+
+#             serializer = PortfolioSerializer(portfolio)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+
+#         except Exception as e:
+#             return Response(
+#                 {"error": "An internal server error occurred while processing transaction.", "details": str(e)},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             )
+
+
+# class AlertListCreateView(generics.ListCreateAPIView):
+#     """
+#     GET /api/alerts/ - List active user alerts.
+#     POST /api/alerts/ - Create new price alert target.
+#     """
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = AlertSerializer
+
+#     def get_queryset(self):
+#         try:
+#             return Alert.objects.filter(user=self.request.user)
+#         except Exception:
+#             return Alert.objects.none()
+
+#     def create(self, request, *args, **kwargs):
+#         target_price = request.data.get("target_price")
+#         direction = request.data.get("direction")
+
+#         # Input validation for create
+#         if target_price is None or direction is None:
+#             return Response(
+#                 {"error": "Both 'target_price' and 'direction' fields are required."},
+#                 status=status.HTTP_400_BAD_REQUEST,
+#             )
+
+#         try:
+#             target_price_dec = Decimal(str(target_price))
+#             if target_price_dec <= Decimal("0"):
+#                 return Response(
+#                     {"error": "target_price must be greater than zero."},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+#         except (InvalidOperation, TypeError, ValueError):
+#             return Response(
+#                 {"error": "Invalid target_price format."},
+#                 status=status.HTTP_400_BAD_REQUEST,
+#             )
+
+#         if str(direction).lower().strip() not in ["above", "below"]:
+#             return Response(
+#                 {"error": "direction must be 'above' or 'below'."},
+#                 status=status.HTTP_400_BAD_REQUEST,
+#             )
+
+#         return super().create(request, *args, **kwargs)
+
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
+
 class PortfolioView(APIView):
     """
-    GET /api/portfolio/ - Retrieve current user portfolio (auto-creates if missing).
-    POST /api/portfolio/ - Buy/Sell BTC using paper trading cash.
+    GET  /api/portfolio/  -> wallet (USD), holdings, total value, profit/loss
+    POST /api/portfolio/  {"action": "buy"|"sell", "amount_usd": "500.00"} -> wallet + the executed trade
     """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        try:
-            portfolio, created = Portfolio.objects.get_or_create(user=request.user)
-            serializer = PortfolioSerializer(portfolio)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(
-                {"error": "Could not retrieve portfolio", "details": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        portfolio, _ = Portfolio.objects.get_or_create(user=request.user)
+        return Response(PortfolioSerializer(portfolio).data)
 
     def post(self, request):
+        req = TradeRequestSerializer(data=request.data)
+        req.is_valid(raise_exception=True)
         try:
-            portfolio, _ = Portfolio.objects.get_or_create(user=request.user)
-            action = request.data.get("action")
-            amount_inr = request.data.get("amount_inr")
+            portfolio, trade = execute_trade(request.user, req.validated_data["action"], req.validated_data["amount"])
+        except TradeError as e:
+            return Response({"error": e.message, "details": e.details}, status=e.status)
+        data = {**PortfolioSerializer(portfolio).data, "trade": TradeSerializer(trade).data}
+        if req.validated_data["used_legacy"]:
+            data["warning"] = "amount_inr is deprecated and was treated as USD. Use amount_usd."
+        return Response(data)
 
-            # 1. Required Field Validation
-            if not action or amount_inr is None:
-                return Response(
-                    {"error": "Both 'action' and 'amount_inr' fields are required."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
 
-            # 2. Action Field Validation
-            action = str(action).lower().strip()
-            if action not in ["buy", "sell"]:
-                return Response(
-                    {"error": "Invalid action. Allowed choices are 'buy' or 'sell'."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+class TradeListView(generics.ListAPIView):
+    """GET /api/trades/ - the signed-in user's trade history, newest first."""
+    permission_classes = [IsAuthenticated]
+    serializer_class = TradeSerializer
 
-            # 3. Numeric Amount & Non-negative Validation
-            try:
-                amount_inr = Decimal(str(amount_inr))
-                if amount_inr <= Decimal("0"):
-                    return Response(
-                        {"error": "Amount must be greater than zero."},
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
-            except (InvalidOperation, TypeError, ValueError):
-                return Response(
-                    {"error": "Invalid amount provided. Must be a positive numeric value."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            # 4. Fetch Market Data
-            latest_entry = OHLCV.objects.order_by("-date").first()
-            if not latest_entry or latest_entry.close <= Decimal("0"):
-                return Response(
-                    {"error": "Market data currently unavailable for trading calculation."},
-                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
-                )
-
-            btc_price = latest_entry.close
-
-            # 5. Trading Execution
-            if action == "buy":
-                if portfolio.cash_balance < amount_inr:
-                    return Response(
-                        {
-                            "error": "Insufficient funds.",
-                            "current_balance": str(portfolio.cash_balance),
-                            "requested": str(amount_inr),
-                        },
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
-                btc_purchased = amount_inr / btc_price
-                portfolio.cash_balance -= amount_inr
-                portfolio.btc_holdings += btc_purchased
-                portfolio.save()
-
-            elif action == "sell":
-                btc_to_sell = amount_inr / btc_price
-                if portfolio.btc_holdings < btc_to_sell:
-                    return Response(
-                        {
-                            "error": "Insufficient BTC holdings to complete sell order.",
-                            "current_holdings": str(portfolio.btc_holdings),
-                            "requested_btc": str(btc_to_sell),
-                        },
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
-                portfolio.cash_balance += amount_inr
-                portfolio.btc_holdings -= btc_to_sell
-                portfolio.save()
-
-            serializer = PortfolioSerializer(portfolio)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response(
-                {"error": "An internal server error occurred while processing transaction.", "details": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+    def get_queryset(self):
+        return Trade.objects.filter(user=self.request.user)
 
 
 class AlertListCreateView(generics.ListCreateAPIView):
-    """
-    GET /api/alerts/ - List active user alerts.
-    POST /api/alerts/ - Create new price alert target.
-    """
+    """GET /api/alerts/?is_triggered=false  |  POST /api/alerts/ {target_price, direction}"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = AlertSerializer
+    filterset_fields = ["is_triggered"]
+
+    def get_queryset(self):
+        return Alert.objects.filter(user=self.request.user).order_by("-created_at")
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class AlertDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET / PATCH / DELETE /api/alerts/<id>/ - editing a target re-arms the alert."""
     permission_classes = [IsAuthenticated]
     serializer_class = AlertSerializer
 
     def get_queryset(self):
-        try:
-            return Alert.objects.filter(user=self.request.user)
-        except Exception:
-            return Alert.objects.none()
+        return Alert.objects.filter(user=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        target_price = request.data.get("target_price")
-        direction = request.data.get("direction")
-
-        # Input validation for create
-        if target_price is None or direction is None:
-            return Response(
-                {"error": "Both 'target_price' and 'direction' fields are required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            target_price_dec = Decimal(str(target_price))
-            if target_price_dec <= Decimal("0"):
-                return Response(
-                    {"error": "target_price must be greater than zero."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except (InvalidOperation, TypeError, ValueError):
-            return Response(
-                {"error": "Invalid target_price format."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if str(direction).lower().strip() not in ["above", "below"]:
-            return Response(
-                {"error": "direction must be 'above' or 'below'."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        return super().create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def perform_update(self, serializer):
+        serializer.save(is_triggered=False, triggered_at=None)
 
 class SentimentView(APIView):
     """

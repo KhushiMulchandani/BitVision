@@ -1,15 +1,22 @@
-from django.test import TestCase
-
-# Create your tests here.
 from datetime import date
+from decimal import Decimal
+from io import StringIO
 from unittest import mock
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.management import call_command
 from rest_framework.test import APITestCase
 
-from core.models import OHLCV, ModelMetric, Portfolio, Prediction
+from core.alerts import check_alerts
+from core.models import OHLCV, Alert, ModelMetric, Portfolio, Prediction, Trade
 from ml.model_loader import ModelsNotTrained
+
+from django.core.cache import cache
+
+from django.test import TestCase
+
+# Create your tests here.
 
 PRICES = {"rf": 80100, "xgb": 80200, "lstm": 79900, "stacked": 80150}
 PASSWORD = "Str0ng!Pass_2026"
@@ -21,7 +28,8 @@ def _result(pred_date, close=80000.0):
     return {"based_on_date": "2026-11-20", "date": pred_date, "current_close": close,
             "direction": "up", "models": models}
 
-
+def _candle(close, day=date(2026, 11, 20)):
+    return OHLCV.objects.create(date=day, open=close, high=close, low=close, close=close, volume=1)
 class AuthTests(APITestCase):
     def setUp(self):
         cache.clear()      # throttle counters live in the cache
@@ -155,3 +163,127 @@ class CompareBacktestTests(APITestCase):
         self.assertTrue(all(x["model_used"] == "stacked" for x in r.data["results"]))
         self.assertEqual(self.client.get("/api/backtest/").data["count"], 80)
         self.assertEqual(self.client.get("/api/backtest/?model=stacked&days=5").data["count"], 6)
+
+
+
+class PortfolioTests(APITestCase):
+    url = "/api/portfolio/"
+
+    def setUp(self):
+        self.user = User.objects.create_user("trader", "t@example.com", PASSWORD)
+        self.client.force_authenticate(self.user)
+        _candle(50000)
+
+    def _trade(self, **data):
+        return self.client.post(self.url, data, format="json")
+
+    def test_requires_auth(self):
+        self.client.force_authenticate(None)
+        self.assertEqual(self.client.get(self.url).status_code, 401)
+        self.assertEqual(self._trade(action="buy", amount_usd="10").status_code, 401)
+
+    def test_get_creates_wallet_in_usd(self):
+        r = self.client.get(self.url)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.data["currency"], "USD")
+        self.assertEqual(Decimal(r.data["cash_balance"]), Decimal("10000"))
+        self.assertEqual(r.data["total_value"], "10000.00")
+        self.assertEqual(r.data["profit_loss"], "0.00")
+
+    def test_buy_updates_wallet_and_records_trade(self):
+        r = self._trade(action="buy", amount_usd="5000")
+        self.assertEqual(r.status_code, 200)
+        p = Portfolio.objects.get(user=self.user)
+        self.assertEqual(p.cash_balance, Decimal("5000.00"))
+        self.assertEqual(p.btc_holdings, Decimal("0.10000000"))
+        self.assertEqual(r.data["trade"]["side"], "buy")
+        self.assertEqual(Trade.objects.filter(user=self.user).count(), 1)
+
+    def test_sell_after_buy(self):
+        self._trade(action="buy", amount_usd="5000")
+        r = self._trade(action="sell", amount_usd="2500")
+        self.assertEqual(r.status_code, 200)
+        p = Portfolio.objects.get(user=self.user)
+        self.assertEqual(p.cash_balance, Decimal("7500.00"))
+        self.assertEqual(p.btc_holdings, Decimal("0.05000000"))
+
+    def test_insufficient_funds_and_holdings(self):
+        r = self._trade(action="buy", amount_usd="20000")
+        self.assertEqual(r.status_code, 400)
+        self.assertIn("error", r.data)
+        self.assertEqual(self._trade(action="sell", amount_usd="100").status_code, 400)
+        self.assertEqual(Trade.objects.count(), 0)
+
+    def test_invalid_input_rejected(self):
+        bad = [{"action": "hold", "amount_usd": "10"}, {"action": "buy", "amount_usd": "0"},
+               {"action": "buy", "amount_usd": "-5"}, {"action": "buy", "amount_usd": "abc"},
+               {"action": "buy", "amount_usd": "NaN"}, {"action": "buy"}]
+        for payload in bad:
+            self.assertEqual(self._trade(**payload).status_code, 400, payload)
+
+    def test_legacy_amount_inr_is_accepted_with_warning(self):
+        r = self._trade(action="buy", amount_inr="1000")
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("warning", r.data)
+
+    def test_503_without_market_data(self):
+        OHLCV.objects.all().delete()
+        self.assertEqual(self._trade(action="buy", amount_usd="10").status_code, 503)
+
+    def test_trade_history_is_per_user(self):
+        other = User.objects.create_user("other", "o@example.com", PASSWORD)
+        Trade.objects.create(user=other, side="buy", usd_amount=1, btc_amount="0.00002", price=50000)
+        self._trade(action="buy", amount_usd="100")
+        r = self.client.get("/api/trades/")
+        self.assertEqual(r.data["count"], 1)
+
+
+class AlertTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("a", "a@example.com", PASSWORD)
+        self.other = User.objects.create_user("b", "b@example.com", PASSWORD)
+        self.client.force_authenticate(self.user)
+        _candle(60000)
+
+    def test_create_and_list_only_own(self):
+        r = self.client.post("/api/alerts/", {"target_price": "65000", "direction": "above"}, format="json")
+        self.assertEqual(r.status_code, 201)
+        Alert.objects.create(user=self.other, target_price=1, direction="above")
+        self.assertEqual(self.client.get("/api/alerts/").data["count"], 1)
+
+    def test_validation(self):
+        for payload in ({"target_price": "-1", "direction": "above"},
+                        {"target_price": "100", "direction": "sideways"},
+                        {"direction": "above"}):
+            self.assertEqual(self.client.post("/api/alerts/", payload, format="json").status_code, 400, payload)
+
+    def test_cannot_touch_other_users_alert_but_can_delete_own(self):
+        theirs = Alert.objects.create(user=self.other, target_price=1, direction="above")
+        mine = Alert.objects.create(user=self.user, target_price=1, direction="above")
+        self.assertEqual(self.client.delete(f"/api/alerts/{theirs.id}/").status_code, 404)
+        self.assertEqual(self.client.delete(f"/api/alerts/{mine.id}/").status_code, 204)
+
+    def test_editing_rearms_alert(self):
+        a = Alert.objects.create(user=self.user, target_price=1, direction="above", is_triggered=True)
+        r = self.client.patch(f"/api/alerts/{a.id}/", {"target_price": "70000"}, format="json")
+        self.assertEqual(r.status_code, 200)
+        a.refresh_from_db()
+        self.assertFalse(a.is_triggered)
+        self.assertIsNone(a.triggered_at)
+
+    def test_check_alerts_fires_only_crossed_ones_once(self):
+        hit_above = Alert.objects.create(user=self.user, target_price=59000, direction="above")
+        miss_above = Alert.objects.create(user=self.user, target_price=65000, direction="above")
+        hit_below = Alert.objects.create(user=self.user, target_price=61000, direction="below")
+        miss_below = Alert.objects.create(user=self.user, target_price=55000, direction="below")
+        self.assertEqual(check_alerts(), 2)
+        for a, expected in ((hit_above, True), (miss_above, False), (hit_below, True), (miss_below, False)):
+            a.refresh_from_db()
+            self.assertEqual(a.is_triggered, expected)
+        self.assertIsNotNone(hit_above.triggered_at)
+        self.assertEqual(check_alerts(), 0)
+
+    def test_command_runs(self):
+        out = StringIO()
+        call_command("check_alerts", stdout=out)
+        self.assertIn("Alerts triggered: 0", out.getvalue())
