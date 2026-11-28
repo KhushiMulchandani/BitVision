@@ -9,3 +9,4 @@ class Command(BaseCommand):
         call_command("ingest")
         call_command("compute_features")
         call_command("predict_tomorrow")
+        call_command("check_alerts")

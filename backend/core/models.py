@@ -80,7 +80,22 @@ class Alert(models.Model):
     target_price = models.DecimalField(max_digits=12, decimal_places=2)
     direction = models.CharField(max_length=5, choices=DIRECTION_CHOICES)
     is_triggered = models.BooleanField(default=False)
+    triggered_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Alert: {self.direction} {self.target_price} ({self.user.username})"
+class Trade(models.Model):
+    SIDE_CHOICES = [("buy", "Buy"), ("sell", "Sell")]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="trades")
+    side = models.CharField(max_length=4, choices=SIDE_CHOICES)
+    usd_amount = models.DecimalField(max_digits=14, decimal_places=2)
+    btc_amount = models.DecimalField(max_digits=16, decimal_places=8)
+    price = models.DecimalField(max_digits=12, decimal_places=2)   # BTC price used for the trade (USD)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+
+    def __str__(self):
+        return f"{self.side} {self.btc_amount} BTC @ {self.price} ({self.user.username})"
